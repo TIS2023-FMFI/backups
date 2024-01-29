@@ -4,10 +4,14 @@ import org.jsoup.nodes.Document;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+// connect to server: sftp wb@capek.ii.fmph.uniba.sk
+//send files scp .\some_file.txt wb@capek.ii.fmph.uniba.sk:backup
 public class main {
     public static void main(String[] args) {
         Config c = Config.loadConfig();
@@ -57,7 +61,7 @@ public class main {
 
             // send an email to the user with backup details
             email e = new email();
-            e.sendEmail(email,backupFile.getAbsolutePath(),logFile.getAbsolutePath());
+            e.sendSuccessEmail(email,backupFile.getAbsolutePath(),logFile.getAbsolutePath());
 
             // Display the list of previous backups
             viewBackupLog(destination);

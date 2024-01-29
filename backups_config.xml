@@ -2,10 +2,24 @@
 <backups>
     <emailAdmin>mayozasier@gmail.com</emailAdmin>
     <storageServer>C:\Users\mayoz\Desktop\backups\</storageServer>
-
+    <!-- storageServer>wb@capek.ii.fmph.uniba.sk:backup</storageServer-->
     <!--  comments are ok, empty lines too -->
 
     <site>
+        <name>testing</name>
+        <includeLocation>C:\Users\mayoz\Desktop\test_backup</includeLocation>
+        <!--includeLocation>/some/folder2</includeLocation-->
+        <excludeLocation>C:\Users\mayoz\Desktop\test_backup\no_include</excludeLocation>
+        <!--excludeLocation>/some/folder1/except</excludeLocation-->
+        <autoFullFrequency>7</autoFullFrequency>
+        <autoIncrementalFrequency>1</autoIncrementalFrequency>
+        <autoFirstEverBackup>2024-02-01</autoFirstEverBackup>
+        <autoHourOfDay>4</autoHourOfDay>
+        <autoMinuteOfHour>10</autoMinuteOfHour>
+        <autoKeepNoFullBackups>4</autoKeepNoFullBackups>
+    </site>
+
+    <!--site>
         <name>https://wiki.robotika.sk/robowiki/index.php?title=RoboWiki</name>
         <includeLocation>/some/folder</includeLocation>
         <includeLocation>/some/folder2</includeLocation>
@@ -17,6 +31,6 @@
         <autoHourOfDay>4</autoHourOfDay>
         <autoMinuteOfHour>10</autoMinuteOfHour>
         <autoKeepNoFullBackups>4</autoKeepNoFullBackups>
-    </site>
+    </site-->
 
 </backups>
