@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <backups>
     <emailAdmin>mayozasier@gmail.com</emailAdmin>
-    <storageServer>C:\Users\mayoz\Desktop\backups\</storageServer>
-    <!-- storageServer>wb@capek.ii.fmph.uniba.sk:backup</storageServer-->
+    <!--storageServer>C:\Users\mayoz\Desktop\backups\</storageServer-->
+    <storageServer>wb@capek.ii.fmph.uniba.sk:backup</storageServer>
     <!--  comments are ok, empty lines too -->
 
     <site>
         <name>testing</name>
         <includeLocation>C:\Users\mayoz\Desktop\test_backup</includeLocation>
-        <!--includeLocation>/some/folder2</includeLocation-->
+        <includeLocation>C:\Users\mayoz\Desktop\another_test_backup</includeLocation>
         <excludeLocation>C:\Users\mayoz\Desktop\test_backup\no_include</excludeLocation>
-        <!--excludeLocation>/some/folder1/except</excludeLocation-->
+        <excludeLocation>C:\Users\mayoz\Desktop\test_backup\another_no_include</excludeLocation>
         <autoFullFrequency>7</autoFullFrequency>
         <autoIncrementalFrequency>1</autoIncrementalFrequency>
         <autoFirstEverBackup>2024-02-01</autoFirstEverBackup>

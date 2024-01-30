@@ -9,24 +9,20 @@ public class zip {
     /**public static void main(String[] args){
         zip();
     }*/
-    public void zip(){
+    public static void zip(){
         String filename = "backup_zip_file.zip";
         try (BufferedReader reader = new BufferedReader(new FileReader("list_of_files.txt"));
              ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream(filename))) {
 
             String line;
             while ((line = reader.readLine()) != null) {
-                // Trim leading and trailing whitespaces from the file name
                 String fileName = line.trim();
 
                 //ZipEntry zipEntry = new ZipEntry(fileName); //this way it creates all the folders
                 ZipEntry zipEntry = new ZipEntry(new File(fileName).getName()); //this way just the files are added
 
-
-                // Add the entry to the ZIP file
                 zipOutputStream.putNextEntry(zipEntry);
 
-                // Read the file and write its contents to the ZIP file
                 try (FileInputStream fileInputStream = new FileInputStream(fileName)) {
                     byte[] buffer = new byte[1024];
                     int bytesRead;
@@ -34,8 +30,6 @@ public class zip {
                         zipOutputStream.write(buffer, 0, bytesRead);
                     }
                 }
-
-                // Close the current entry
                 zipOutputStream.closeEntry();
             }
 

@@ -3,10 +3,12 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -17,84 +19,97 @@ public class main {
         Config c = Config.loadConfig();
         if (c != null)
             c.dumpConfig();
+        try{
+            FileWriter file = new FileWriter("list_of_files.txt");
+            file.close();
+        } catch (IOException e){
+            System.out.println(e.getMessage());
+        }
 
-        List<Site> sites = c.getSites();
-        String url = sites.get(0).getName();
+
         String destination = c.getStorageServer();
         String email = c.getEmailAdmin();
-
-        //System.out.println(url + destination);
-        //System.exit(0);
-
-
-
-        try {
-            // Connect to the website and fetch the HTML content
-            Document doc = Jsoup.connect(url).get();
-            String htmlContent = doc.html();
-
-            // Create a backup folder if it doesn't exist
-            File backupFolder = new File(destination);
-            if (!backupFolder.exists()) {
-                backupFolder.mkdir();
+        List<Site> sites = c.getSites();
+        List<String> paths = new ArrayList<>();
+        List<String> exclude = new ArrayList<>();
+        for(Site s:sites){
+            for(String incl:s.getIncludeLocations()){
+                paths.add(incl);
             }
-
-            // Create a timestamp for the backup file
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyy HH.mm");
-            String timestamp = dateFormat.format(new Date());
-
-            String filename = "backup_"+timestamp;
-            // Save the fetched HTML content to a file in the destination folder
-            File backupFile = new File(backupFolder, filename+ ".html");
-            //FileUtils.writeStringToFile(backupFile, htmlContent, "UTF-8");
-            zip z = new zip();
-            z.main(backupFile,htmlContent,destination+filename);
-            backupFile.delete();
-            // Write backup details to the log file
-            File logFile = new File(backupFolder, "backup_log.txt");
-            String logEntry = timestamp + "\t" + filename + "\n";
-            FileUtils.writeStringToFile(logFile, logEntry, "UTF-8", true);
-
-
-            System.out.println("Website backed up successfully to: " + backupFile.getAbsolutePath());
-            System.out.println("Backup log updated at: " + logFile.getAbsolutePath());
-
-            // send an email to the user with backup details
-            email e = new email();
-            e.sendSuccessEmail(email,backupFile.getAbsolutePath(),logFile.getAbsolutePath());
-
-            // Display the list of previous backups
-            viewBackupLog(destination);
-        } catch (IOException e) {
-            System.out.println("Error: " + e.getMessage());
-        }
-    }
-
-    private static void viewBackupLog(String destination) {
-        File backupFolder = new File(destination);
-        File logFile = new File(backupFolder, "backup_log.txt");
-
-        System.out.println("Previous Backups:");
-        try {
-            if (logFile.exists()) {
-                // Read and display the contents of the backup log file
-                String logContent = FileUtils.readFileToString(logFile, "UTF-8");
-                System.out.println(logContent);
-            } else {
-                System.out.println("No previous backups found.");
+            for(String excl:s.getExcludeLocations()){
+                exclude.add(excl);
             }
-        } catch (IOException e) {
-            System.out.println("Error reading backup log: " + e.getMessage());
         }
+        Recursive.ls_recursive(paths,exclude);
+        zip.zip();
+        scp.scp("backup_zip_file.zip",destination);
+        System.exit(0);
     }
-    private static void restoreBackup(String destination, String fileName)
-    {
-
-    }
-
 }
+/**
+ try {
+ // Connect to the website and fetch the HTML content
+ Document doc = Jsoup.connect(url).get();
+ String htmlContent = doc.html();
+
+ // Create a backup folder if it doesn't exist
+ File backupFolder = new File(destination);
+ if (!backupFolder.exists()) {
+ backupFolder.mkdir();
+ }
+
+ // Create a timestamp for the backup file
+ SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyy HH.mm");
+ String timestamp = dateFormat.format(new Date());
+
+ String filename = "backup_"+timestamp;
+ // Save the fetched HTML content to a file in the destination folder
+ File backupFile = new File(backupFolder, filename+ ".html");
+ //FileUtils.writeStringToFile(backupFile, htmlContent, "UTF-8");
+ zip z = new zip();
+ z.main(backupFile,htmlContent,destination+filename);
+ backupFile.delete();
+ // Write backup details to the log file
+ File logFile = new File(backupFolder, "backup_log.txt");
+ String logEntry = timestamp + "\t" + filename + "\n";
+ FileUtils.writeStringToFile(logFile, logEntry, "UTF-8", true);
 
 
+ System.out.println("Website backed up successfully to: " + backupFile.getAbsolutePath());
+ System.out.println("Backup log updated at: " + logFile.getAbsolutePath());
+
+ // send an email to the user with backup details
+ email e = new email();
+ e.sendSuccessEmail(email,backupFile.getAbsolutePath(),logFile.getAbsolutePath());
+
+ // Display the list of previous backups
+ viewBackupLog(destination);
+ } catch (IOException e) {
+ System.out.println("Error: " + e.getMessage());
+ }
+ }
+
+ private static void viewBackupLog(String destination) {
+ File backupFolder = new File(destination);
+ File logFile = new File(backupFolder, "backup_log.txt");
+
+ System.out.println("Previous Backups:");
+ try {
+ if (logFile.exists()) {
+ // Read and display the contents of the backup log file
+ String logContent = FileUtils.readFileToString(logFile, "UTF-8");
+ System.out.println(logContent);
+ } else {
+ System.out.println("No previous backups found.");
+ }
+ } catch (IOException e) {
+ System.out.println("Error reading backup log: " + e.getMessage());
+ }*/
+
+/**private static void restoreBackup(String destination, String fileName)
+ {
+
+ }*/
 
 
 

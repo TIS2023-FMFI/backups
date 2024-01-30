@@ -14,32 +14,26 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Recursive {
-    public static void main(String[] args) {
-        Path directory = Paths.get("C:\\Users\\mayoz\\Desktop\\test_backup");
-        String no_include = "C:\\Users\\mayoz\\Desktop\\test_backup\\no_include";
-        List<Path> paths = listFiles(directory);
-        //List<Path> paths = listDirectories(directory);
-        //paths.forEach(x -> System.out.println(x));
-        try{
-            FileWriter file = new FileWriter("list_of_files.txt");
-            for(Path p: paths){
-                if(!p.toString().contains(no_include)){
-                    file.write(p.toString()+"\n");
+    public static void ls_recursive(List<String> path, List<String> exclude) {
+        for(String p:path){
+            Path directory = Paths.get(p);
+            List<Path> files = listFiles(directory);
+            try{
+                FileWriter file = new FileWriter("list_of_files.txt", true);
+                for(Path filepath: files){
+                    Boolean excluded = false;
+                    for(String ex:exclude){
+                        if(filepath.toString().contains(ex)) excluded = true;
+                    }
+                    if(!excluded){
+                        file.write(filepath.toString()+"\n");
+                    }
                 }
-                else{
-                    System.out.println(p);
-                }
-
+                file.close();
+            } catch (IOException e){
+                System.out.println(e.getMessage());
             }
-            file.close();
-        } catch (IOException e){
-            System.out.println(e.getMessage());
         }
-        /**for(Path p: paths){
-            System.out.println(p);
-            List<Path> files = listFiles(p);
-            files.forEach(x -> System.out.println(x));
-        }*/
     }
 
     public static List<Path> listFiles(Path path){
