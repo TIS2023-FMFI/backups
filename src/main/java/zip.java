@@ -9,8 +9,7 @@ public class zip {
     /**public static void main(String[] args){
         zip();
     }*/
-    public static void zip(){
-        String filename = "backup_zip_file.zip";
+    public static void zip(String filename){
         try (BufferedReader reader = new BufferedReader(new FileReader("list_of_files.txt"));
              ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream(filename))) {
 

@@ -19,14 +19,6 @@ public class main {
         Config c = Config.loadConfig();
         if (c != null)
             c.dumpConfig();
-        try{
-            FileWriter file = new FileWriter("list_of_files.txt");
-            file.close();
-        } catch (IOException e){
-            System.out.println(e.getMessage());
-        }
-
-
         String destination = c.getStorageServer();
         String email = c.getEmailAdmin();
         List<Site> sites = c.getSites();
@@ -40,8 +32,26 @@ public class main {
                 exclude.add(excl);
             }
         }
+
+        try{
+            FileWriter file = new FileWriter("list_of_files.txt");
+            file.close();
+        } catch (IOException e){
+            email em = new email();
+            em.sendError(email,e.getMessage());
+            System.out.println(e.getMessage());
+        }
+
+        for(Site s:sites){
+            for(String incl:s.getIncludeLocations()){
+                paths.add(incl);
+            }
+            for(String excl:s.getExcludeLocations()){
+                exclude.add(excl);
+            }
+        }
         Recursive.ls_recursive(paths,exclude);
-        zip.zip();
+        zip.zip("backup_zip_file.zip");
         scp.scp("backup_zip_file.zip",destination);
         System.exit(0);
     }

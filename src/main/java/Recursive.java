@@ -23,10 +23,13 @@ public class Recursive {
                 for(Path filepath: files){
                     Boolean excluded = false;
                     for(String ex:exclude){
-                        if(filepath.toString().contains(ex)) excluded = true;
+                        if(filepath.toString().contains(ex)){ excluded = true;}
                     }
                     if(!excluded){
                         file.write(filepath.toString()+"\n");
+                        BasicFileAttributes attr = Files.readAttributes(filepath, BasicFileAttributes.class);
+                        System.out.println(filepath.toString()+"\n"+"lastModifiedTime: " + attr.lastModifiedTime());
+                        System.out.println(Files.size(filepath)+" bytes\n");
                     }
                 }
                 file.close();
