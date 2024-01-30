@@ -42,17 +42,10 @@ public class main {
             System.out.println(e.getMessage());
         }
 
-        for(Site s:sites){
-            for(String incl:s.getIncludeLocations()){
-                paths.add(incl);
-            }
-            for(String excl:s.getExcludeLocations()){
-                exclude.add(excl);
-            }
-        }
         Recursive.ls_recursive(paths,exclude);
-        zip.zip("backup_zip_file.zip");
-        scp.scp("backup_zip_file.zip",destination);
+        String zip_name = "backup_zip_file.zip";
+        zip.zip(zip_name);
+        scp.scp(zip_name,destination);
         System.exit(0);
     }
 }
