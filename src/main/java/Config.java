@@ -23,6 +23,8 @@ public class Config {
     String storageServer;
     @XmlElement(name = "site")
     List<Site> sites;
+    @XmlElement(name = "incremental")
+    Boolean incremental;
 
     public String getEmailAdmin() {
         return emailAdmin;
@@ -34,6 +36,10 @@ public class Config {
 
     public List<Site> getSites() {
         return sites;
+    }
+
+    public Boolean getIncremental() {
+        return incremental;
     }
 
     public static Config loadConfig() {
@@ -94,11 +100,11 @@ class Site
     @XmlElement(name = "autoIncrementalFrequency")
     int autoIncrementalFrequency;
     @XmlElement(name = "autoFirstEverBackup")
-    javax.xml.datatype.XMLGregorianCalendar autoFirstEverBackup;
+    String autoFirstEverBackup;
     @XmlElement(name = "autoHourOfDay")
-    int autoHourOfDay;
+    String autoHourOfDay;
     @XmlElement(name = "autoMinuteOfHour")
-    int autoMinuteOfHour;
+    String autoMinuteOfHour;
     @XmlElement(name = "autoKeepNoFullBackups")
     int autoKeepNoFullBackups;
 
@@ -122,15 +128,15 @@ class Site
         return autoIncrementalFrequency;
     }
 
-    public XMLGregorianCalendar getAutoFirstEverBackup() {
+    public String getAutoFirstEverBackup() {
         return autoFirstEverBackup;
     }
 
-    public int getAutoHourOfDay() {
+    public String getAutoHourOfDay() {
         return autoHourOfDay;
     }
 
-    public int getAutoMinuteOfHour() {
+    public String getAutoMinuteOfHour() {
         return autoMinuteOfHour;
     }
 

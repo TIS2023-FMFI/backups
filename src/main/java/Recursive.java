@@ -8,13 +8,17 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.FileTime;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Recursive {
-    public static void ls_recursive(List<String> path, List<String> exclude) {
+    public static void ls_recursive(List<String> path, List<String> exclude, String date, Boolean incremental) {
         for(String p:path){
             Path directory = Paths.get(p);
             List<Path> files = listFiles(directory);
@@ -26,10 +30,31 @@ public class Recursive {
                         if(filepath.toString().contains(ex)){ excluded = true;}
                     }
                     if(!excluded){
-                        file.write(filepath.toString()+"\n");
+                        if(incremental){
+                            BasicFileAttributes attr = Files.readAttributes(filepath, BasicFileAttributes.class);
+                            Date d = new Date(attr.lastModifiedTime().toMillis());
+                            SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH.mm");
+                            String formattedDate = dateFormat.format(d);
+                            try{
+                                Date file_date = dateFormat.parse(formattedDate);
+                                Date incremental_date = dateFormat.parse(date);
+                                if(file_date.compareTo(incremental_date)>0){
+                                    file.write(filepath.toString()+"\n");
+                                }
+                            } catch (ParseException e){
+                                System.out.println(e.getMessage());
+                            }
+
+                        } else{
+                            file.write(filepath.toString()+"\n");
+                        }
+                        System.out.println(filepath.toString());
                         BasicFileAttributes attr = Files.readAttributes(filepath, BasicFileAttributes.class);
-                        System.out.println(filepath.toString()+"\n"+"lastModifiedTime: " + attr.lastModifiedTime());
-                        System.out.println(Files.size(filepath)+" bytes\n");
+                        Date d = new Date(attr.lastModifiedTime().toMillis());
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH.mm");
+                        String formattedDate = dateFormat.format(d);
+                        System.out.println("Last modified date: "+formattedDate);
+                        System.out.println("Size"+Files.size(filepath)+" bytes\n");
                     }
                 }
                 file.close();

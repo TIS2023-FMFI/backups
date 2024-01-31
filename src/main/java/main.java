@@ -22,31 +22,34 @@ public class main {
         String destination = c.getStorageServer();
         String email = c.getEmailAdmin();
         List<Site> sites = c.getSites();
+        Boolean incremental = c.getIncremental();
         List<String> paths = new ArrayList<>();
         List<String> exclude = new ArrayList<>();
-        for(Site s:sites){
-            for(String incl:s.getIncludeLocations()){
+        String date = null;
+        for (Site s : sites) {
+            for (String incl : s.getIncludeLocations()) {
                 paths.add(incl);
             }
-            for(String excl:s.getExcludeLocations()){
+            for (String excl : s.getExcludeLocations()) {
                 exclude.add(excl);
             }
+            //write the date on format dd.MM.yyyy HH.mm
+            date = s.getAutoFirstEverBackup() + " " + s.getAutoHourOfDay() + "." + s.getAutoMinuteOfHour();
         }
 
-        try{
+        try {
             FileWriter file = new FileWriter("list_of_files.txt");
             file.close();
-        } catch (IOException e){
+        } catch (IOException e) {
             email em = new email();
-            em.sendError(email,e.getMessage());
+            em.sendError(email, e.getMessage());
             System.out.println(e.getMessage());
         }
 
-        Recursive.ls_recursive(paths,exclude);
+        Recursive.ls_recursive(paths, exclude, date, incremental);
         String zip_name = "backup_zip_file.zip";
         zip.zip(zip_name);
-        scp.scp(zip_name,destination);
-        System.exit(0);
+        scp.scp(zip_name, destination);
     }
 }
 /**
@@ -62,7 +65,7 @@ public class main {
  }
 
  // Create a timestamp for the backup file
- SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyy HH.mm");
+ SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH.mm");
  String timestamp = dateFormat.format(new Date());
 
  String filename = "backup_"+timestamp;
