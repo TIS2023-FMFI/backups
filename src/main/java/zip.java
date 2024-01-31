@@ -17,8 +17,8 @@ public class zip {
             while ((line = reader.readLine()) != null) {
                 String fileName = line.trim();
 
-                //ZipEntry zipEntry = new ZipEntry(fileName); //this way it creates all the folders
-                ZipEntry zipEntry = new ZipEntry(new File(fileName).getName()); //this way just the files are added
+                ZipEntry zipEntry = new ZipEntry(fileName); //this way it creates all the folders
+                //ZipEntry zipEntry = new ZipEntry(new File(fileName).getName()); //this way just the files are added
 
                 zipOutputStream.putNextEntry(zipEntry);
 
