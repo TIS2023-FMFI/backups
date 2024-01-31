@@ -23,10 +23,10 @@ public class main {
         String email = c.getEmailAdmin();
         List<Site> sites = c.getSites();
         Boolean incremental = c.getIncremental();
-        List<String> paths = new ArrayList<>();
-        List<String> exclude = new ArrayList<>();
         String date = null;
         for (Site s : sites) {
+            List<String> paths = new ArrayList<>();
+            List<String> exclude = new ArrayList<>();
             for (String incl : s.getIncludeLocations()) {
                 paths.add(incl);
             }
@@ -35,21 +35,25 @@ public class main {
             }
             //write the date on format dd.MM.yyyy HH.mm
             date = s.getAutoFirstEverBackup() + " " + s.getAutoHourOfDay() + "." + s.getAutoMinuteOfHour();
+            String name = s.getName();
+            System.out.println("Backup of the site "+name+" in process...");
+            try {
+                FileWriter file = new FileWriter("list_of_files.txt");
+                file.close();
+            } catch (IOException e) {
+                email em = new email();
+                em.sendError(email, e.getMessage());
+                System.out.println(e.getMessage());
+            }
+            Recursive.ls_recursive(paths, exclude, date, incremental);
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH.mm");
+            String timestamp = dateFormat.format(new Date());
+            String zip_name = name+"_"+timestamp+".zip";
+            zip.zip(zip_name);
+            scp.scp(zip_name, destination);
         }
 
-        try {
-            FileWriter file = new FileWriter("list_of_files.txt");
-            file.close();
-        } catch (IOException e) {
-            email em = new email();
-            em.sendError(email, e.getMessage());
-            System.out.println(e.getMessage());
-        }
 
-        Recursive.ls_recursive(paths, exclude, date, incremental);
-        String zip_name = "backup_zip_file.zip";
-        zip.zip(zip_name);
-        scp.scp(zip_name, destination);
     }
 }
 /**

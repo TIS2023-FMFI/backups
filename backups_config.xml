@@ -7,7 +7,21 @@
     <incremental>false</incremental>
 
     <site>
-        <name>testing</name>
+        <name>site1</name>
+        <includeLocation>C:\Users\mayoz\Desktop\test_backup</includeLocation>
+        <includeLocation>C:\Users\mayoz\Desktop\another_test_backup</includeLocation>
+        <excludeLocation>C:\Users\mayoz\Desktop\test_backup\no_include</excludeLocation>
+        <excludeLocation>C:\Users\mayoz\Desktop\test_backup\another_no_include</excludeLocation>
+        <autoFullFrequency>7</autoFullFrequency>
+        <autoIncrementalFrequency>1</autoIncrementalFrequency>
+        <autoFirstEverBackup>31.01.2024</autoFirstEverBackup>
+        <autoHourOfDay>04</autoHourOfDay>
+        <autoMinuteOfHour>10</autoMinuteOfHour>
+        <autoKeepNoFullBackups>4</autoKeepNoFullBackups>
+    </site>
+
+    <site>
+        <name>site2</name>
         <includeLocation>C:\Users\mayoz\Desktop\test_backup</includeLocation>
         <includeLocation>C:\Users\mayoz\Desktop\another_test_backup</includeLocation>
         <excludeLocation>C:\Users\mayoz\Desktop\test_backup\no_include</excludeLocation>
